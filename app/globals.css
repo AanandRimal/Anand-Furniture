@@ -1,0 +1,212 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-walnut: var(--walnut);
+  --color-brass: var(--brass);
+  --color-linen: var(--linen);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: dark;
+  /* Umber stage */
+  --background: oklch(0.155 0.012 55);
+  --foreground: oklch(0.94 0.014 80);
+  --card: oklch(0.2 0.014 55);
+  --card-foreground: oklch(0.94 0.014 80);
+  --popover: oklch(0.2 0.014 55);
+  --popover-foreground: oklch(0.94 0.014 80);
+  /* Brass */
+  --primary: oklch(0.78 0.1 78);
+  --primary-foreground: oklch(0.18 0.02 55);
+  --secondary: oklch(0.24 0.016 55);
+  --secondary-foreground: oklch(0.94 0.014 80);
+  --muted: oklch(0.24 0.016 55);
+  --muted-foreground: oklch(0.7 0.02 75);
+  /* Walnut */
+  --accent: oklch(0.36 0.055 45);
+  --accent-foreground: oklch(0.94 0.014 80);
+  --destructive: oklch(0.6 0.2 25);
+  --border: oklch(0.94 0.014 80 / 12%);
+  --input: oklch(0.94 0.014 80 / 16%);
+  --ring: oklch(0.78 0.1 78 / 60%);
+  --walnut: oklch(0.36 0.055 45);
+  --brass: oklch(0.78 0.1 78);
+  --linen: oklch(0.94 0.014 80);
+  --radius: 0.25rem;
+  /* The dark stage colour, kept out of .tone-paper so a section can fade between the two. */
+  --stage: oklch(0.155 0.012 55);
+}
+
+/*
+ * Warm paper. The dark stage is right for the film and the renders, and wrong
+ * for long stretches of reading, so the sections that argue and the catalogue
+ * that sells sit on linen instead. Every component reads these same tokens, so
+ * wrapping a section in this class is all it takes.
+ */
+.tone-paper {
+  color-scheme: light;
+  background-color: var(--background);
+  color: var(--foreground);
+  --background: oklch(0.958 0.012 84);
+  --foreground: oklch(0.235 0.02 50);
+  --card: oklch(0.985 0.008 86);
+  --card-foreground: oklch(0.235 0.02 50);
+  --popover: oklch(0.985 0.008 86);
+  --popover-foreground: oklch(0.235 0.02 50);
+  --primary: oklch(0.52 0.086 62);
+  --primary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.92 0.014 82);
+  --secondary-foreground: oklch(0.235 0.02 50);
+  --muted: oklch(0.92 0.014 82);
+  --muted-foreground: oklch(0.45 0.025 58);
+  --accent: oklch(0.36 0.055 45);
+  --accent-foreground: oklch(0.98 0.01 85);
+  --border: oklch(0.235 0.02 50 / 14%);
+  --input: oklch(0.235 0.02 50 / 22%);
+  --ring: oklch(0.52 0.086 62 / 50%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+  }
+  /* Keep the page still while the gallery lightbox is open. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+  ::selection {
+    background: var(--brass);
+    color: var(--primary-foreground);
+  }
+}
+
+/* Soft cuts between the dark stage and the paper sections. */
+@utility cut-in {
+  background-image: linear-gradient(to bottom, var(--stage), var(--background));
+}
+
+@utility cut-out {
+  background-image: linear-gradient(to bottom, var(--background), var(--stage));
+}
+
+@utility film-grain {
+  position: relative;
+  &::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+}
+
+@utility vignette {
+  &::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 45%, oklch(0.1 0.01 55 / 0.7) 100%);
+  }
+}
+
+@utility text-display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.4;
+  }
+}
+
+@utility animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-pulse-dot {
+    animation: none;
+  }
+}
