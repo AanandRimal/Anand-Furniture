@@ -11,7 +11,7 @@ import type { Spec } from '@/lib/catalog'
 
 const group: Variants = {
   hidden: {},
-  shown: { transition: { staggerChildren: 0.16, delayChildren: 0.45 } },
+  shown: { transition: { staggerChildren: 0.1, delayChildren: 0.18 } },
 }
 
 const pin: Variants = {
@@ -26,12 +26,12 @@ const dot: Variants = {
 
 const leader: Variants = {
   hidden: { scaleX: 0 },
-  shown: { scaleX: 1, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.12 } },
+  shown: { scaleX: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.08 } },
 }
 
 const label = (side: number): Variants => ({
   hidden: { opacity: 0, x: 10 * side },
-  shown: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.4 } },
+  shown: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1], delay: 0.22 } },
 })
 
 export function SpecPins({ specs, active }: { specs: readonly Spec[]; active: boolean }) {

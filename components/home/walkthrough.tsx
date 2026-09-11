@@ -24,6 +24,13 @@ const slot = 1 / count
 
 // Scroll timelines require keyframe offsets strictly inside [0, 1]; the first and
 // last scenes' transition windows would otherwise spill past the edges.
+/**
+ * Where scene i sits still, as a multiple of the viewport height from the top
+ * of the section. The sticky panel scrolls (count - 1) viewports in total, so
+ * the middle of scene i's hold is not simply i + 0.5.
+ */
+const restAt = (i: number) => ((i + 0.5) / count) * (count - 1)
+
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 const range = (...points: number[]) => {
   const out = points.map(clamp01)
@@ -51,8 +58,7 @@ export function Walkthrough() {
     const el = sectionRef.current
     if (!el) return
     const top = el.getBoundingClientRect().top + window.scrollY
-    const vh = window.innerHeight
-    window.scrollTo({ top: top + index * vh + vh * 0.35, behavior: 'smooth' })
+    window.scrollTo({ top: top + restAt(index) * window.innerHeight, behavior: 'smooth' })
   }, [])
 
   if (reduceMotion) {
@@ -66,10 +72,34 @@ export function Walkthrough() {
       style={{ height: `${count * 100}svh` }}
       className="relative bg-background"
     >
-      <div className="sticky top-0 h-svh overflow-hidden bg-background film-grain">
+      {/*
+        One snap point per room, parked where that room sits still. Scrolling
+        therefore settles on a room rather than halfway through a doorway, and a
+        fast flick cannot skip past one unseen.
+      */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-full" aria-hidden="true">
         {scenes.map((scene, i) => (
-          <Scene key={scene.slug} index={i} progress={scrollYProgress} scene={scene} isActive={active === i} />
+          <div
+            key={scene.slug}
+            className="absolute inset-x-0 h-px snap-start"
+            style={{ top: `calc(${restAt(i).toFixed(4)} * 100svh)` }}
+          />
         ))}
+      </div>
+
+      <div className="sticky top-0 h-svh overflow-hidden bg-background film-grain">
+        {/*
+          Only the room either side of this one is mounted, so the next
+          photograph is decoded before its door opens. Each one then hides
+          itself outside its own window: a clipped full-bleed layer still costs
+          a composite even when nothing of it is showing, and stacking those
+          was what made the scroll stutter.
+        */}
+        {scenes.map((scene, i) =>
+          Math.abs(i - active) <= 1 ? (
+            <Scene key={scene.slug} index={i} progress={scrollYProgress} scene={scene} isActive={active === i} />
+          ) : null,
+        )}
         <SceneRail active={active} onJump={jumpTo} />
         <ProgressStrip progress={scrollYProgress} active={active} />
       </div>
@@ -105,14 +135,20 @@ function Scene({ index, progress, scene, isActive }: SceneProps) {
   const scale = useTransform(progress, cameraRange, isFirst ? [1.06, 1.06, 1.16, 1.28] : [1.3, 1.08, 1.17, 1.29])
   const x = useTransform(progress, cameraRange, [`${-1.6 * drift}%`, `${0.4 * drift}%`, `${1.4 * drift}%`, `${2.2 * drift}%`])
 
-  // A short blur and a dip in the light across the cut: the eye reads it as a
-  // camera moving rather than two photographs swapping.
-  // ponytail: one blurred full-bleed layer at a time, fine on current phones.
-  const blur = useTransform(progress, enterRange, isFirst ? [0, 0, 0] : [5, 4, 0])
-  const brightness = useTransform(progress, enterRange, isFirst ? [1, 1, 1] : [0.55, 0.7, 1])
-  const filter = useMotionTemplate`blur(${blur}px) brightness(${brightness})`
+  // The light dips as you pass through the threshold. This used to be a
+  // filter: blur() plus brightness() on the photograph, which repaints a
+  // full-screen layer on every frame and was the main source of the stutter.
+  // An overlay's opacity gets the same read for free on the compositor.
+  const shade = useTransform(progress, enterRange, isFirst ? [0, 0, 0] : [0.55, 0.34, 0])
 
   const dim = useTransform(progress, range(end - slot * 0.22, end + slot * 0.12), isLast ? [0, 0] : [0, 0.75])
+
+  // Outside its own stretch of the scroll a room paints nothing at all, so a
+  // hold costs one layer and only a threshold costs two.
+  const exitEnd = end + slot * 0.14
+  const visibility = useTransform(progress, (p) =>
+    p >= enterFrom - 0.002 && p <= exitEnd ? 'visible' : 'hidden',
+  )
 
   // The doorjamb sweeping past the lens as you step through it.
   const frameScale = useTransform(progress, enterRange, [1, 1.5, 3])
@@ -124,9 +160,10 @@ function Scene({ index, progress, scene, isActive }: SceneProps) {
   const ghostY = useTransform(progress, textRange, ['12%', '0%', '-4%', '-14%'])
 
   return (
-    <motion.div style={{ clipPath, zIndex: index }} className="absolute inset-0 will-change-[clip-path]">
-      <motion.div style={{ scale, x, filter }} className="absolute inset-0 origin-center will-change-transform">
+    <motion.div style={{ clipPath, zIndex: index, visibility }} className="absolute inset-0 will-change-[clip-path]">
+      <motion.div style={{ scale, x }} className="absolute inset-0 origin-center will-change-transform">
         <Image src={scene.image} alt={scene.label} fill priority={index < 2} sizes="100vw" className="object-cover" />
+        <motion.div style={{ opacity: shade }} className="absolute inset-0 bg-[oklch(0.08_0.01_55)]" />
       </motion.div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-background/30" />
