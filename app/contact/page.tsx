@@ -88,8 +88,16 @@ export default function ContactPage() {
             <Detail icon={Mail} label="Email">
               <a href={`mailto:${company.email}`} className="inline-block py-1 hover:text-primary transition-colors">{company.email}</a>
             </Detail>
-            <Detail icon={MapPin} label="Showroom">
-              {company.address}
+            <Detail icon={MapPin} label="Showroom & workshop">
+              <a
+                href={company.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block py-1 hover:text-primary transition-colors"
+              >
+                {company.address}
+                <span className="mt-1 block font-mono text-xs text-muted-foreground">{company.plusCode}</span>
+              </a>
             </Detail>
             <Detail icon={Clock} label="Hours">
               {company.hours}

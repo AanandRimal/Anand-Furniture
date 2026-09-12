@@ -6,7 +6,24 @@ export const company = {
   phoneDisplay: '+977 985-1099571',
   whatsapp: '9779851099571',
   email: 'hello@anandfurniture.com',
-  address: 'Showroom & Workshop, Kathmandu, Nepal',
+  address: 'Manamaiju Mandir, Gongabu, Kathmandu 44600, Nepal',
+  /** Split out because search engines want the parts, not the sentence. */
+  addressParts: {
+    street: 'Manamaiju Mandir, Gongabu',
+    locality: 'Kathmandu',
+    region: 'Bagmati Province',
+    postalCode: '44600',
+    country: 'NP',
+  },
+  /**
+   * Decoded from the plus code Q856+2X2 Tarakeshwar, so it is the same point
+   * Google resolves that code to rather than an approximation.
+   */
+  geo: { latitude: 27.757513, longitude: 85.312391 },
+  plusCode: 'Q856+2X2 Tarakeshwar, Bagmati Province',
+  /** A permanent pin. Live-location share links expire, so never use one here. */
+  mapUrl: 'https://www.google.com/maps/search/?api=1&query=27.757513%2C85.312391',
+  social: ['https://www.facebook.com/profile.php?id=100072294222168'],
   hours: 'Sun – Fri, 10:00 – 18:30',
   founded: 1998,
   /**

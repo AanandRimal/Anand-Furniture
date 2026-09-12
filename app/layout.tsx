@@ -147,11 +147,19 @@ const siteSchema = {
       knowsLanguage: ['en', 'ne'],
       address: {
         '@type': 'PostalAddress',
-        streetAddress: company.address,
-        addressLocality: 'Kathmandu',
-        addressRegion: 'Bagmati',
-        addressCountry: 'NP',
+        streetAddress: company.addressParts.street,
+        addressLocality: company.addressParts.locality,
+        addressRegion: company.addressParts.region,
+        postalCode: company.addressParts.postalCode,
+        addressCountry: company.addressParts.country,
       },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: company.geo.latitude,
+        longitude: company.geo.longitude,
+      },
+      hasMap: company.mapUrl,
+      sameAs: company.social,
       areaServed: ['Kathmandu', 'Lalitpur', 'Bhaktapur', 'Nepal'].map((name) => ({ '@type': 'Place', name })),
       openingHoursSpecification: {
         '@type': 'OpeningHoursSpecification',
@@ -173,8 +181,8 @@ const siteSchema = {
           },
         })),
       },
-      // Add the Facebook, Instagram and Google Business Profile URLs here:
-      // sameAs: ['https://www.facebook.com/...', 'https://www.instagram.com/...'],
+      // Add the Instagram and Google Business Profile URLs to company.social
+      // as they exist.
       //
       // No aggregateRating until the testimonials on this site are real,
       // verifiable customers. Marking up invented reviews breaks Google's

@@ -45,11 +45,34 @@ export function SiteFooter() {
         <div className="md:col-span-2 flex flex-col gap-4">
           <p className="eyebrow text-muted-foreground">Visit</p>
           <address className="not-italic text-sm text-foreground/80 leading-relaxed">
-            {company.address}
+            <a
+              href={company.mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block py-1 hover:text-primary transition-colors"
+            >
+              {company.address}
+            </a>
             <br />
             {company.hours}
             <br />
             <a href={`mailto:${company.email}`} className="inline-block py-1 hover:text-primary transition-colors">{company.email}</a>
+            {company.social.length > 0 && (
+              <>
+                <br />
+                {company.social.map((url) => (
+                  <a
+                    key={url}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block py-1 hover:text-primary transition-colors"
+                  >
+                    Facebook
+                  </a>
+                ))}
+              </>
+            )}
           </address>
         </div>
       </div>
