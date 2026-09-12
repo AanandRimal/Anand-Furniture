@@ -24,7 +24,7 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
   title: {
-    default: 'Premium Furniture in Nepal — Kitchens, Wardrobes, Sofas & Interiors',
+    default: 'Anand Furniture — Premium Furniture & Interiors in Nepal',
     template: `%s | ${company.shortName} Furniture`,
   },
   description:
@@ -105,8 +105,11 @@ export const metadata: Metadata = {
       'max-video-preview': -1,
     },
   },
-  // Paste the Search Console token here when the domain is verified:
-  // verification: { google: 'xxxxxxxx' },
+  // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION in Vercel to the token Search
+  // Console gives you, then redeploy. No code change needed.
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   icons: {
     icon: [
       { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
@@ -129,7 +132,7 @@ const siteSchema = {
       '@type': 'FurnitureStore',
       '@id': `${company.url}#business`,
       name: company.name,
-      alternateName: 'Anand Furniture Nepal',
+      alternateName: ['Anand Furniture', 'Anand Furniture Nepal', 'आनन्द फर्निचर'],
       url: company.url,
       telephone: `+977${company.phone}`,
       email: company.email,
@@ -194,7 +197,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`bg-background ${fraunces.variable} ${manrope.variable}`}>
+    <html lang="en-NP" className={`bg-background ${fraunces.variable} ${manrope.variable}`}>
       <body className="antialiased min-h-svh flex flex-col">
         <a
           href="#main"

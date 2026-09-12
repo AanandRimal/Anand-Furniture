@@ -9,7 +9,13 @@ export const company = {
   address: 'Showroom & Workshop, Kathmandu, Nepal',
   hours: 'Sun – Fri, 10:00 – 18:30',
   founded: 1998,
-  url: 'https://anandfurniture.com',
+  /**
+   * The live domain, with the www that the apex redirects to. Everything that
+   * tells Google where a page lives is built from this: the canonical tags, the
+   * sitemap, robots.txt, the social previews and the structured data. If it is
+   * ever wrong, the whole site quietly de-indexes itself.
+   */
+  url: 'https://www.anand-furniture.com.np',
 }
 
 import { galleryFiles } from '@/lib/gallery.generated'
