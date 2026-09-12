@@ -167,7 +167,7 @@
   font-weight: 300;
   letter-spacing: -0.02em;
   line-height: 0.95;
-  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-variation-settings: 'opsz' 144;
 }
 
 @utility eyebrow {

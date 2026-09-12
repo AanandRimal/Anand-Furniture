@@ -162,7 +162,7 @@ function Scene({ index, progress, scene, isActive }: SceneProps) {
   return (
     <motion.div style={{ clipPath, zIndex: index, visibility }} className="absolute inset-0 will-change-[clip-path]">
       <motion.div style={{ scale, x }} className="absolute inset-0 origin-center will-change-transform">
-        <Image src={scene.image} alt={scene.label} fill priority={index < 2} sizes="100vw" className="object-cover" />
+        <Image src={scene.image} alt={scene.label} fill sizes="100vw" className="object-cover" />
         <motion.div style={{ opacity: shade }} className="absolute inset-0 bg-[oklch(0.08_0.01_55)]" />
       </motion.div>
 
@@ -339,7 +339,7 @@ function StaticWalkthrough() {
     <section aria-label="A walkthrough of the house" className="flex flex-col">
       {scenes.map((scene, i) => (
         <div key={scene.slug} className="relative h-[80svh] min-h-[480px] overflow-hidden">
-          <Image src={scene.image} alt={scene.label} fill priority={i === 0} sizes="100vw" className="object-cover" />
+          <Image src={scene.image} alt={scene.label} fill sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 px-5 md:px-10 pb-12 flex flex-col gap-4 max-w-2xl">
             <p className="eyebrow text-primary">
