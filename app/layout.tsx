@@ -170,13 +170,21 @@ const siteSchema = {
         opens: '10:00',
         closes: '18:30',
       },
+      // Typed as Service, not Product: these are category listings with no
+      // price of their own, and Google's Product rich-result check requires
+      // every 'Product' it finds to carry offers, a review or an
+      // aggregateRating. Marking these Product produced nine "critical
+      // issue" entries on every single page of the site, because this schema
+      // is emitted site-wide from the root layout. The real priced items are
+      // the individual designs, correctly typed Product with an offer, in
+      // each collection page's own schema below.
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Furniture collections',
         itemListElement: categories.map((c) => ({
           '@type': 'Offer',
           itemOffered: {
-            '@type': 'Product',
+            '@type': 'Service',
             name: c.name,
             description: c.description,
             url: `${company.url}/collections/${c.slug}`,
