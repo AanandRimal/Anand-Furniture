@@ -114,8 +114,13 @@ export const metadata: Metadata = {
   // fixed background, so unlike the old placeholder there is no separate
   // light/dark variant — one file covers both the browser tab and Google's
   // search result icon.
+  // Google's favicon guidelines want the icon square and a multiple of 48px
+  // to be eligible to show in search results (https://developers.google.com/search/docs/appearance/favicon-in-search).
+  // 32/16 satisfy browser tabs but not that rule, so icon-96x96 is listed
+  // first for Google's favicon crawler to prefer.
   icons: {
     icon: [
+      { url: '/icon-96x96.png', sizes: '96x96', type: 'image/png' },
       { url: '/icon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/icon-16x16.png', sizes: '16x16', type: 'image/png' },
     ],
